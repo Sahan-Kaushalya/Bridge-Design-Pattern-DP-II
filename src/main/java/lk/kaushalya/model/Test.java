@@ -1,14 +1,16 @@
 package lk.kaushalya.model;
 
-
+// implementor
 interface OS {
     public void launchApp();
 
     public void closeApp();
 }
 
+// abstraction
 abstract class App {
 
+    // HAS-A relationship with OS
     protected OS os;
 
     public App(OS os) {
