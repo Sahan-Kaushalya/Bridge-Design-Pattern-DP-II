@@ -3,12 +3,12 @@ package lk.kaushalya.practical;
 /**
  * Practical 03
  * Bridge Pattern
- *
+ * <p>
  * You have to develop an action game which has different types of weapons (Ex: Pistol, Shotgun, Sniper,
  * etc.) and soldier types (Ex: Infantry, Commando, Ranger, etc.). A soldier can hold only one weapon at a
  * time. But they can run, take any types of weapon and shoot. Develop the game by using the bridge design
  * pattern to display the following actions,
- *
+ * <p>
  * Ranger:
  * - Running
  * - Taking the Sniper
@@ -16,7 +16,7 @@ package lk.kaushalya.practical;
  * - Drop the Sniper
  * - Taking Pistol
  * - Shoot
- *
+ * <p>
  * Commando:
  * - Running
  * - Taking the Shotgun
@@ -26,69 +26,85 @@ package lk.kaushalya.practical;
  * - Shoot
  */
 
-interface  Weapon {
+interface Weapon {
     void shoot();
+
     void drop();
+
     void take();
 }
 
-abstract class Soldier{
-    protected  Weapon weapon;
+abstract class Soldier {
+    protected Weapon weapon;
 
     public Soldier(Weapon weapon) {
         this.weapon = weapon;
     }
 
-    public  void run() {
-        System.out.println("Soldier is running...");
+    public void run() {
+        System.out.println("Running");
     }
-    public abstract  void shoot();
-    public abstract  void dropWeapon(Weapon weapon);
-    public abstract  void takeWeapon(Weapon weapon);
-}
 
-class Sniper implements Weapon{
+    public void takeWeapon(Weapon weapon) {
+        this.weapon = weapon;
+        this.weapon.take();
+    }
+
+    public void dropWeapon() {
+        if (this.weapon != null) {
+            this.weapon.drop();
+            this.weapon = null;
+        }
+    }
 
     public void shoot() {
-        System.out.println("Sniper is shooting...");
+        if (this.weapon != null) {
+            this.weapon.shoot();
+        }
+    }
+
+    public abstract void performAction();
+}
+
+class Sniper implements Weapon {
+    public void take() {
+        System.out.println("Taking the Sniper");
+    }
+
+    public void shoot() {
+        System.out.println("Shoot");
     }
 
     public void drop() {
-        System.out.println("Sniper is dropped");
-    }
-
-    public void take() {
-        System.out.println("Sniper is taken");
+        System.out.println("Drop the Sniper");
     }
 }
 
-class Shotgun implements Weapon{
+class Shotgun implements Weapon {
+    public void take() {
+        System.out.println("Taking the Shotgun");
+    }
 
     public void shoot() {
-        System.out.println("Shotgun is shooting...");
+        System.out.println("Shoot");
     }
 
     public void drop() {
-        System.out.println("Shotgun is dropped");
-    }
-
-    public void take() {
-        System.out.println("Shotgun is taken");
+        System.out.println("Drop the Shotgun");
     }
 }
 
-class Pistol implements Weapon{
+class Pistol implements Weapon {
+    public void take() {
+        System.out.println("Taking Pistol");
+    }
 
     public void shoot() {
-        System.out.println("Pistol is shooting...");
+        System.out.println("Shoot");
     }
 
     public void drop() {
-        System.out.println("Pistol is dropped");
-    }
-
-    public void take() {
-        System.out.println("Pistol is taken");
+        System.out.println("Drop the Pistol");
     }
 }
 
@@ -99,28 +115,11 @@ class Ranger extends Soldier {
     }
 
     @Override
-    public void run() {
-        System.out.println("Ranger is running...");
+    public void performAction() {
+        System.out.println("Ranger is performing action");
     }
 
-    @Override
-    public void shoot() {
-        System.out.println("Ranger is shooting...");
-        weapon.shoot();
-    }
 
-    @Override
-    public void dropWeapon(Weapon weapon) {
-        System.out.println("Ranger is dropping the weapon...");
-        weapon.drop();
-    }
-
-    @Override
-    public void takeWeapon(Weapon weapon) {
-        System.out.println("Ranger is taking the weapon...");
-        this.weapon =weapon;
-        weapon.take();
-    }
 }
 
 class Commando extends Soldier {
@@ -129,28 +128,10 @@ class Commando extends Soldier {
     }
 
     @Override
-    public void run() {
-        System.out.println("Commando is running...");
+    public void performAction() {
+        System.out.println("Commando is performing action");
     }
 
-    @Override
-    public void shoot() {
-        System.out.println("Commando is shooting...");
-        weapon.shoot();
-    }
-
-    @Override
-    public void dropWeapon(Weapon weapon) {
-        System.out.println("Commando is dropping the weapon...");
-        weapon.drop();
-    }
-
-    @Override
-    public void takeWeapon(Weapon weapon) {
-        System.out.println("Commando is taking the weapon...");
-        this.weapon =weapon;
-        weapon.take();
-    }
 }
 
 public class Practical {
@@ -160,20 +141,22 @@ public class Practical {
         Weapon pistol = new Pistol();
 
         Soldier ranger = new Ranger(sniper);
+        ranger.performAction();
         ranger.run();
         ranger.takeWeapon(sniper);
         ranger.shoot();
-        ranger.dropWeapon(sniper);
+        ranger.dropWeapon();
         ranger.takeWeapon(pistol);
         ranger.shoot();
 
         System.out.println();
 
         Soldier commando = new Commando(shotgun);
+        commando.performAction();
         commando.run();
         commando.takeWeapon(shotgun);
         commando.shoot();
-        commando.dropWeapon(shotgun);
+        commando.dropWeapon();
         commando.takeWeapon(sniper);
         commando.shoot();
     }
